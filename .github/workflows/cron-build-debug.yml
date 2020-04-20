@@ -2,7 +2,7 @@ name: "Cron Build Debug"
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/10 * * * *'
   repository_dispatch:
 
 jobs:
