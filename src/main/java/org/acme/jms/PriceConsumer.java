@@ -13,6 +13,9 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
 
@@ -21,6 +24,8 @@ import io.quarkus.runtime.StartupEvent;
  */
 @ApplicationScoped
 public class PriceConsumer implements Runnable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PriceConsumer.class);
 
     @Inject
     ConnectionFactory connectionFactory;
@@ -34,7 +39,9 @@ public class PriceConsumer implements Runnable {
     }
 
     void onStart(@Observes StartupEvent ev) {
+        LOG.info("On Start Begin");
         scheduler.submit(this);
+        LOG.info("Submitted");
     }
 
     void onStop(@Observes ShutdownEvent ev) {
@@ -43,15 +50,23 @@ public class PriceConsumer implements Runnable {
 
     @Override
     public void run() {
+        LOG.info("Running");
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+            LOG.info("Context creation returned");
+
             JMSConsumer consumer = context.createConsumer(context.createQueue("prices"));
+            LOG.info("Consumer creation returned");
+
             while (true) {
                 Message message = consumer.receive();
                 if (message == null) {
+                    LOG.info("Receive returned null");
                     // receive returns `null` if the JMSConsumer is closed
                     return;
                 }
+                LOG.info("Receive returned message");
                 lastPrice = message.getBody(String.class);
+                LOG.info("Price = " + lastPrice);
             }
         } catch (JMSException e) {
             throw new RuntimeException(e);

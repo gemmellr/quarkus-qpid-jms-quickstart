@@ -10,7 +10,11 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSContext;
+import javax.jms.JMSProducer;
 import javax.jms.Session;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
@@ -21,6 +25,8 @@ import io.quarkus.runtime.StartupEvent;
 @ApplicationScoped
 public class PriceProducer implements Runnable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PriceProducer.class);
+
     @Inject
     ConnectionFactory connectionFactory;
 
@@ -28,7 +34,9 @@ public class PriceProducer implements Runnable {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     void onStart(@Observes StartupEvent ev) {
+        LOG.info("On Start Begin");
         scheduler.scheduleWithFixedDelay(this, 0L, 5L, TimeUnit.SECONDS);
+        LOG.info("Scheduled");
     }
 
     void onStop(@Observes ShutdownEvent ev) {
@@ -37,8 +45,14 @@ public class PriceProducer implements Runnable {
 
     @Override
     public void run() {
+        LOG.info("Running");
         try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            context.createProducer().send(context.createQueue("prices"), Integer.toString(random.nextInt(100)));
+            LOG.info("Context creation returned");
+            JMSProducer producer = context.createProducer();
+            LOG.info("Producer creation returned");
+            producer.send(context.createQueue("prices"), Integer.toString(random.nextInt(100)));
+            LOG.info("Send returned");
         }
+        LOG.info("Context closed");
     }
 }
