@@ -25,7 +25,7 @@ public class PriceTest {
         try {
         assertTrue(Wait.waitFor(() -> {
             return RestAssured.given().when().get("/prices/last").getStatusCode() == 200;
-        }, 3000, 25), "Price didnt became available in allotted time");
+        }, 5000, 25), "Price didnt became available in allotted time");
         } catch(AssertionFailedError afe) {
             try {
                 printThreadDump();
