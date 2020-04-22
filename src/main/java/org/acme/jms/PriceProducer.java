@@ -35,7 +35,7 @@ public class PriceProducer implements Runnable {
 
     void onStart(@Observes StartupEvent ev) {
         LOG.info("On Start Begin");
-        scheduler.scheduleWithFixedDelay(this, 0L, 5L, TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(this, 5L, 5L, TimeUnit.SECONDS);
         LOG.info("Scheduled");
     }
 
