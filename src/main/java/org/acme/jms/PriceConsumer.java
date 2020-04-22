@@ -69,7 +69,11 @@ public class PriceConsumer implements Runnable {
                 LOG.info("Price = " + lastPrice);
             }
         } catch (JMSException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw t;
         }
     }
 }

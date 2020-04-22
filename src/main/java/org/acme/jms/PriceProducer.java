@@ -46,12 +46,17 @@ public class PriceProducer implements Runnable {
     @Override
     public void run() {
         LOG.info("Running");
-        try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
-            LOG.info("Context creation returned");
-            JMSProducer producer = context.createProducer();
-            LOG.info("Producer creation returned");
-            producer.send(context.createQueue("prices"), Integer.toString(random.nextInt(100)));
-            LOG.info("Send returned");
+        try {
+            try (JMSContext context = connectionFactory.createContext(Session.AUTO_ACKNOWLEDGE)) {
+                LOG.info("Context creation returned");
+                JMSProducer producer = context.createProducer();
+                LOG.info("Producer creation returned");
+                producer.send(context.createQueue("prices"), Integer.toString(random.nextInt(100)));
+                LOG.info("Send returned");
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw t;
         }
         LOG.info("Context closed");
     }
