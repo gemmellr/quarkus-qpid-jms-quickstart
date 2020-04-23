@@ -32,4 +32,4 @@ jobs:
         run: git clone --depth 1 --branch try-master-config-race-fix https://github.com/gemmellr/quarkus-qpid-jms.git && cd quarkus-qpid-jms && echo "Current Quarkus Qpid JMS commit:" $(git rev-parse HEAD) && mvn release:update-versions -DdevelopmentVersion=999-SNAPSHOT && mvn -B clean install -DskipTests -DskipITs -Dquarkus.version=999-SNAPSHOT
 
       - name: Build - JVM
-        run: for i in $(seq 1 150); do PN_TRACE_FRM=true mvn -B clean verify -Pextension-version -Dquarkus.platform.artifact-id=quarkus-bom -Dquarkus.platform.version=999-SNAPSHOT -Dquarkus-plugin.version=999-SNAPSHOT -Dquarkus-qpid-jms.version=0.14.0-SNAPSHOT -Dquarkus.log.category.\"org.apache.qpid.jms\".level=trace || ! break; done
+        run: for i in $(seq 1 150); do PN_TRACE_FRM=true mvn -B clean verify -Pextension-version -Dquarkus.platform.artifact-id=quarkus-bom -Dquarkus.platform.version=999-SNAPSHOT -Dquarkus-plugin.version=999-SNAPSHOT -Dquarkus-qpid-jms.version=999-SNAPSHOT -Dquarkus.log.category.\"org.apache.qpid.jms\".level=trace || ! break; done
