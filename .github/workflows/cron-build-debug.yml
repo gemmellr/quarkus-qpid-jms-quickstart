@@ -2,7 +2,7 @@ name: "Cron Build Debug"
 
 on:
   schedule:
-    - cron: '*/20 * * * *'
+    - cron: '0 * * * *'
   repository_dispatch:
 
 jobs:
@@ -25,8 +25,8 @@ jobs:
       - name: Pull Quarkus Native Builder Image ${{ matrix.graal }}-java${{ matrix.java }}
         run: docker pull quay.io/quarkus/ubi-quarkus-native-image:${{ matrix.graal }}-java${{ matrix.java }}
 
-      - name: Initial Build
-        run: mvn -B clean package -DskipTests
+      - name: Build Updated Extension
+        run: git clone --depth 1 --branch try-volatile-config-fix https://github.com/gemmellr/quarkus-qpid-jms.git && cd quarkus-qpid-jms && echo "Current Quarkus Qpid JMS commit:" $(git rev-parse HEAD) && mvn -B clean install -DskipTests -DskipITs
 
       - name: Build - JVM
-        run: for i in $(seq 1 50); do PN_TRACE_FRM=true mvn -B clean verify -Dquarkus.log.category.\"org.apache.qpid.jms\".level=trace || ! break; done
+        run: for i in $(seq 1 150); do PN_TRACE_FRM=true mvn -B clean verify -Pextension-version -Dquarkus.platform.artifact-id=quarkus-bom -Dquarkus.platform.version=1.4.0.CR1 -Dquarkus-plugin.version=1.4.0.CR1 -Dquarkus-qpid-jms.version=0.14.0-SNAPSHOT -Dquarkus.log.category.\"org.apache.qpid.jms\".level=trace || ! break; done
