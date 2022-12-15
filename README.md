@@ -37,13 +37,11 @@ In addition to the [prices.html](src/main/resources/META-INF/resources/prices.ht
 
 The client configuration is located in the [application.properties](src/main/resources/application.properties) configuration file.
 
-## Running in native
+## Running as native executable
 
-You can compile the application into a native binary using:
+You can compile the application into a native executable in a container using:
 
-`mvn clean package -Pnative`
-
-If you dont have GraalVM installed, this will fall back to using a container build the native executable.
+`mvn clean package -Pnative -Dquarkus.native.container-build=true`
 
 The native application executable can then be run with:
 
