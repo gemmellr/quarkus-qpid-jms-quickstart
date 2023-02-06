@@ -39,21 +39,21 @@ jobs:
         if: matrix.graal != 'none'
         run: docker pull quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:${{ matrix.graal }}-java${{ matrix.java }}
 
-      - name: Build Quarkus main
+      - name: Build Quarkus 2.16.x-SNAPSHOT
         env:
           MAVEN_PL: "., io.quarkus:quarkus-bom, io.quarkus:quarkus-core-deployment, io.quarkus:quarkus-arc-deployment, io.quarkus:quarkus-netty-deployment, io.quarkus:quarkus-extension-processor, io.quarkus:quarkus-bootstrap-bom, io.quarkus:quarkus-bootstrap-bom-test, io.quarkus:quarkus-extension-maven-plugin, io.quarkus:quarkus-maven-plugin, io.quarkus:quarkus-resteasy-reactive-deployment, io.quarkus:quarkus-jackson-deployment, io.quarkus:quarkus-junit5, io.quarkus:quarkus-jsonp-deployment"
         run: |
-          git clone --depth 1 --branch main https://github.com/quarkusio/quarkus.git && cd quarkus && echo "Current Quarkus commit:" $(git rev-parse HEAD)
+          git clone --depth 1 --branch 2.16 https://github.com/quarkusio/quarkus.git && cd quarkus && echo "Current Quarkus commit:" $(git rev-parse HEAD)
           mvn -B -s ../.github/cron-maven-settings.xml clean install -DskipTests -DskipITs -Dformat.skip -DskipDocs -am -pl "${MAVEN_PL}"
 
-      - name: Build Extension main against Quarkus main
+      - name: Build Extension main against Quarkus 2.16.x-SNAPSHOT
         run: |
           git clone --depth 1 --branch main https://github.com/amqphub/quarkus-qpid-jms.git && cd quarkus-qpid-jms && echo "Current Quarkus Qpid JMS commit:" $(git rev-parse HEAD)
           mvn release:update-versions -DdevelopmentVersion=999-SNAPSHOT
-          mvn -B clean install -DskipTests -DskipITs -Dquarkus-version=999-SNAPSHOT
+          mvn -B clean install -DskipTests -DskipITs -Dquarkus-version=2.16.999-SNAPSHOT
 
       - name: Build - JVM
-        run: mvn -B -s .github/cron-maven-settings.xml clean verify -Dquarkus.qpid.jms.group-id=org.amqphub.quarkus -Dquarkus.qpid.jms.version=999-SNAPSHOT -Dquarkus.platform.group-id=io.quarkus -Dquarkus.platform.version=999-SNAPSHOT
+        run: mvn -B -s .github/cron-maven-settings.xml clean verify -Dquarkus.qpid.jms.group-id=org.amqphub.quarkus -Dquarkus.qpid.jms.version=999-SNAPSHOT -Dquarkus.platform.group-id=io.quarkus -Dquarkus.platform.version=2.16.999-SNAPSHOT
 
       - name: Build - Native
         if: matrix.graal != 'none'
