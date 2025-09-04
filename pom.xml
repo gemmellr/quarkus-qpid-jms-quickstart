@@ -11,8 +11,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.26.4</quarkus.platform.version>
+        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+        <quarkus.platform.version>3.27.0</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.3.1</surefire-plugin.version>
         <maven-enforcer-plugin-version>3.4.1</maven-enforcer-plugin-version>
@@ -20,8 +20,8 @@
 
         <!-- Helper properties for CI etc testing, allows using the extensions original bom rather than its one from io.quarkus.platform, useful when using Quarkus core directly instead. E.g:
              mvn clean verify -Pnative -Dquarkus.qpid.jms.group-id=org.amqphub.quarkus -Dquarkus.qpid.jms.version=<version> -Dquarkus.platform.group-id=io.quarkus -Dquarkus.platform.version=999-SNAPSHOT -->
-        <quarkus.qpid.jms.group-id>${quarkus.platform.group-id}</quarkus.qpid.jms.group-id>
-        <quarkus.qpid.jms.version>${quarkus.platform.version}</quarkus.qpid.jms.version>
+        <quarkus.qpid.jms.group-id>org.amqphub.quarkus</quarkus.qpid.jms.group-id>
+        <quarkus.qpid.jms.version>2.10.0</quarkus.qpid.jms.version>
     </properties>
 
     <dependencyManagement>
@@ -43,6 +43,20 @@
         </dependencies>
     </dependencyManagement>
 
+<!--
+  <repositories>
+    <repository>
+      <id>staging-repo</id>
+      <url>https://oss.sonatype.org/content/repositories/orgamqphub-1155</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+-->
     <dependencies>
         <dependency>
             <groupId>org.amqphub.quarkus</groupId>
